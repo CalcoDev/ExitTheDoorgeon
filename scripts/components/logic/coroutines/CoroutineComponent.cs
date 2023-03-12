@@ -73,6 +73,12 @@ public partial class CoroutineComponent : Node
         IEnumerator now = _enumerators.Peek();
         if (now.MoveNext())
         {
+            if (now.Current is IEnumerator enumerator)
+            {
+                _enumerators.Push(enumerator);
+                return;
+            }
+
             if (now.Current is not IYieldable yieldable)
                 return;
 

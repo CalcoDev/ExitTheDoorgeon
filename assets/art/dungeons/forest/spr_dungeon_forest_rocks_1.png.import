@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dy74kulhjsqc7"
-path="res://.godot/imported/pixel.png-9ebae21e2de465774e1748396f0f3fda.ctex"
+uid="uid://cu481gtwr1fbl"
+path="res://.godot/imported/spr_dungeon_forest_rocks_1.png-3deb2a766152982657b5af5edbd04a68.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/pixel.png"
-dest_files=["res://.godot/imported/pixel.png-9ebae21e2de465774e1748396f0f3fda.ctex"]
+source_file="res://assets/art/dungeons/forest/spr_dungeon_forest_rocks_1.png"
+dest_files=["res://.godot/imported/spr_dungeon_forest_rocks_1.png-3deb2a766152982657b5af5edbd04a68.ctex"]
 
 [params]
 

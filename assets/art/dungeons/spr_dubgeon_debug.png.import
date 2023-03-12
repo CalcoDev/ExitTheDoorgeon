@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dy74kulhjsqc7"
-path="res://.godot/imported/pixel.png-9ebae21e2de465774e1748396f0f3fda.ctex"
+uid="uid://e4bwqvxmctbw"
+path="res://.godot/imported/spr_dubgeon_debug.png-54acf3ee0f8d0dfe45909f27f3fa45e6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/art/pixel.png"
-dest_files=["res://.godot/imported/pixel.png-9ebae21e2de465774e1748396f0f3fda.ctex"]
+source_file="res://assets/art/dungeons/spr_dubgeon_debug.png"
+dest_files=["res://.godot/imported/spr_dubgeon_debug.png-54acf3ee0f8d0dfe45909f27f3fa45e6.ctex"]
 
 [params]
 

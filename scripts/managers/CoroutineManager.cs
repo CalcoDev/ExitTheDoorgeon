@@ -5,6 +5,8 @@ using Godot;
 
 namespace Game.Managers;
 
+// TODO(calco): Store coroutines in a different way, so that a coroutine will not trigger issues if referencing a node that has been removed from the tree.
+// Thing is I should maybe just check for that in the coroutine itself...
 public partial class CoroutineManager : Node
 {
     private static readonly List<CoroutineComponent> ActiveCoroutines = new List<CoroutineComponent>();

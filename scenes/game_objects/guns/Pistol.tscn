@@ -1,0 +1,25 @@
+[gd_scene load_steps=6 format=3 uid="uid://2wm13mqkcegg"]
+
+[ext_resource type="Script" path="res://scripts/resources/guns/Pistol.cs" id="1_gtd88"]
+[ext_resource type="PackedScene" uid="uid://bpoaci160xko4" path="res://scenes/game_objects/bullets/PistolBullet.tscn" id="2_me58m"]
+[ext_resource type="PackedScene" uid="uid://bqrdolfqcdrdg" path="res://scenes/components/logic/TimerComponent.tscn" id="3_7wosy"]
+[ext_resource type="Texture2D" uid="uid://dyeutnnusew77" path="res://assets/art/guns/spr_pistol.png" id="4_ldnqp"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_5t0vj"]
+diffuse_texture = ExtResource("4_ldnqp")
+
+[node name="Pistol" type="Node2D"]
+script = ExtResource("1_gtd88")
+BulletScene = ExtResource("2_me58m")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(3, -2)
+texture = SubResource("CanvasTexture_5t0vj")
+
+[node name="BulletSpawnPoint" type="Marker2D" parent="."]
+position = Vector2(9, -4)
+gizmo_extents = 5.0
+
+[node name="ReloadTimer" parent="." instance=ExtResource("3_7wosy")]
+
+[node name="FireTimer" parent="." instance=ExtResource("3_7wosy")]

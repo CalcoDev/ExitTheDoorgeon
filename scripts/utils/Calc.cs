@@ -17,9 +17,18 @@ public static class Calc
         return (a < 0) == (b < 0);
     }
 
-    public static float Approach(float current, float target, float maxDelta)
+    public static float ApproachF(float current, float target, float maxDelta)
     {
         return current < target ? Mathf.Min(current + maxDelta, target) : Mathf.Max(current - maxDelta, target);
+    }
+
+    public static Vector2 ApproachV(Vector2 current, Vector2 target, float maxDelta)
+    {
+        var c = new Vector2();
+        c.X = ApproachF(current.X, target.X, maxDelta);
+        c.Y = ApproachF(current.Y, target.Y, maxDelta);
+
+        return c;
     }
 
     public static bool FloatEquals(float a, float b, float epsilon = 0.001f)

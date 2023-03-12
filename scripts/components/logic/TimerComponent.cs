@@ -8,6 +8,8 @@ public partial class TimerComponent : Node
     [Export] public bool UpdateSelf { get; set; } = false;
     [Export] public bool RemoveOnComplete { get; set; } = false;
 
+    [Export]
+
     public float Time { get; private set; }
 
     public bool HasFinished => Calc.FloatEquals(Time, 0f);
@@ -47,6 +49,7 @@ public partial class TimerComponent : Node
         if (HasFinished && !_triggeredEvent)
         {
             _triggeredEvent = true;
+            UpdateSelf = false;
             EmitSignal(SignalName.OnTimeout);
 
             if (RemoveOnComplete)
@@ -59,6 +62,8 @@ public partial class TimerComponent : Node
 
     public void Start(float time)
     {
+        _triggeredEvent = false;
+
         UpdateSelf = true;
         Time = time;
     }
@@ -66,6 +71,14 @@ public partial class TimerComponent : Node
     public void Pause()
     {
         UpdateSelf = false;
+    }
+
+    public void Stop()
+    {
+        _triggeredEvent = false;
+
+        UpdateSelf = false;
+        Time = 0f;
     }
 
     public void SetTime(float time)

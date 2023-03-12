@@ -1,16 +1,135 @@
-[gd_scene load_steps=5 format=3 uid="uid://cjjin3npj7t0j"]
+[gd_scene load_steps=14 format=3 uid="uid://cjjin3npj7t0j"]
 
-[ext_resource type="PackedScene" uid="uid://dc6p8rgmglefo" path="res://scenes/components/FollowerComponent.tscn" id="1_025fn"]
-[ext_resource type="PackedScene" uid="uid://madi510sjop8" path="res://scenes/components/logic/StateMachineComponent.tscn" id="2_710n8"]
-[ext_resource type="PackedScene" uid="uid://bqrdolfqcdrdg" path="res://scenes/components/logic/TimerComponent.tscn" id="3_g7eny"]
-[ext_resource type="PackedScene" uid="uid://ddd5t57absvy" path="res://scenes/components/logic/CoroutineComponent.tscn" id="4_2ph6t"]
+[ext_resource type="Texture2D" uid="uid://cu481gtwr1fbl" path="res://assets/art/dungeons/forest/spr_dungeon_forest_rocks_1.png" id="1_vujhm"]
+[ext_resource type="Texture2D" uid="uid://b8dh2l2bduae4" path="res://assets/art/dungeons/forest/spr_dungeon_forest.png" id="2_tghie"]
+[ext_resource type="Script" path="res://scripts/game_objects/player/Player.cs" id="3_a3n0t"]
+[ext_resource type="Texture2D" uid="uid://bycbc7btet6nu" path="res://assets/art/entities/player/spr_player_debug.png" id="3_k2lx5"]
+[ext_resource type="PackedScene" uid="uid://bjex6pdfuqm6k" path="res://scenes/components/FactionComponent.tscn" id="4_b1tr2"]
+[ext_resource type="PackedScene" uid="uid://madi510sjop8" path="res://scenes/components/logic/StateMachineComponent.tscn" id="5_so08p"]
+[ext_resource type="PackedScene" uid="uid://l31oxg5dgdrp" path="res://scenes/game_objects/guns/Shotgun.tscn" id="7_ian2o"]
 
-[node name="Main" type="Node2D"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_wj2fa"]
+atlas = ExtResource("3_k2lx5")
+region = Rect2(32, 0, 32, 32)
 
-[node name="FollowerComponent" parent="." instance=ExtResource("1_025fn")]
+[sub_resource type="AtlasTexture" id="AtlasTexture_k6ltu"]
+atlas = ExtResource("3_k2lx5")
+region = Rect2(96, 0, 32, 32)
 
-[node name="StateMachineComponent" parent="." instance=ExtResource("2_710n8")]
+[sub_resource type="AtlasTexture" id="AtlasTexture_uc78f"]
+atlas = ExtResource("3_k2lx5")
+region = Rect2(64, 0, 32, 32)
 
-[node name="TimerComponent" parent="." instance=ExtResource("3_g7eny")]
+[sub_resource type="AtlasTexture" id="AtlasTexture_h1irs"]
+atlas = ExtResource("3_k2lx5")
+region = Rect2(0, 0, 32, 32)
 
-[node name="CoroutineComponent" parent="." instance=ExtResource("4_2ph6t")]
+[sub_resource type="SpriteFrames" id="SpriteFrames_5kmxf"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wj2fa")
+}],
+"loop": true,
+"name": &"walk_down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k6ltu")
+}],
+"loop": true,
+"name": &"walk_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uc78f")
+}],
+"loop": true,
+"name": &"walk_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h1irs")
+}],
+"loop": true,
+"name": &"walk_up",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_d68vs"]
+radius = 5.0
+
+[node name="MainScene" type="Node2D"]
+
+[node name="DungeonCollider" type="StaticBody2D" parent="."]
+collision_mask = 0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="DungeonCollider"]
+build_mode = 1
+polygon = PackedVector2Array(96, 158, 238, 229, 242, 229, 384, 159, 384, 157, 242, 86, 238, 86, 96, 157)
+
+[node name="QuestionableCollider" type="StaticBody2D" parent="."]
+position = Vector2(-3, -6)
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="QuestionableCollider"]
+position = Vector2(0, -31)
+build_mode = 1
+polygon = PackedVector2Array(76, 196, 243, 279, 411, 196, 413, 138, 246, 62, 76, 126)
+
+[node name="SprDungeonForestRocks1" type="Sprite2D" parent="."]
+position = Vector2(241, 117)
+texture = ExtResource("1_vujhm")
+
+[node name="SprDungeonForest" type="Sprite2D" parent="."]
+position = Vector2(240, 164)
+texture = ExtResource("2_tghie")
+
+[node name="YSort" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Player" type="CharacterBody2D" parent="YSort" node_paths=PackedStringArray("PrimaryGun", "_rightGunPos", "_leftGunPos")]
+position = Vector2(238, 152)
+collision_layer = 2
+motion_mode = 1
+script = ExtResource("3_a3n0t")
+MoveSpeed = 150.0
+Acceleration = 60.0
+PrimaryGun = NodePath("GunPositions/Right/Shotgun")
+_rightGunPos = NodePath("GunPositions/Right")
+_leftGunPos = NodePath("GunPositions/Left")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="YSort/Player"]
+position = Vector2(0, -12)
+sprite_frames = SubResource("SpriteFrames_5kmxf")
+animation = &"walk_right"
+
+[node name="FactionComponent" parent="YSort/Player" instance=ExtResource("4_b1tr2")]
+FactionType = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="YSort/Player"]
+shape = SubResource("CircleShape2D_d68vs")
+
+[node name="StateMachine" parent="YSort/Player" instance=ExtResource("5_so08p")]
+
+[node name="GunPositions" type="Node2D" parent="YSort/Player"]
+position = Vector2(0, -12)
+
+[node name="Right" type="Marker2D" parent="YSort/Player/GunPositions"]
+position = Vector2(12, 3)
+gizmo_extents = 3.0
+
+[node name="Shotgun" parent="YSort/Player/GunPositions/Right" instance=ExtResource("7_ian2o")]
+
+[node name="Left" type="Marker2D" parent="YSort/Player/GunPositions"]
+position = Vector2(-12, 3)
+gizmo_extents = 3.0

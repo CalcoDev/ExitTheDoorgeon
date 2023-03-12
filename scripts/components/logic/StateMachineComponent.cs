@@ -17,14 +17,14 @@ public partial class StateMachineComponent : Node
 
     private int _stateCount;
 
-    private readonly Action[] _enters;
-    private readonly Func<int>[] _updates;
-    private readonly Action[] _exits;
+    private Action[] _enters;
+    private Func<int>[] _updates;
+    private Action[] _exits;
 
-    private readonly Func<IEnumerator>[] _coroutines;
-    private readonly CoroutineComponent _currentCoroutine;
+    private Func<IEnumerator>[] _coroutines;
+    private CoroutineComponent _currentCoroutine;
 
-    public StateMachineComponent(int maxStates, int defaultState)
+    public void Init(int maxStates, int defaultState)
     {
         _stateCount = maxStates;
 
@@ -37,6 +37,11 @@ public partial class StateMachineComponent : Node
         this.AddChild(_currentCoroutine);
 
         _previousState = _state = defaultState;
+    }
+
+    public StateMachineComponent(int maxStates, int defaultState)
+    {
+        Init(maxStates, defaultState);
     }
 
     // Added so that editor can spawn this component, without running into issues.

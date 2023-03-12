@@ -1,4 +1,7 @@
+using System.Collections;
+using System.Linq;
 using Game.Managers;
+using Game.Managers.Scenes;
 using Godot;
 using Godot.Collections;
 using GodotUtilities;
@@ -7,12 +10,12 @@ namespace Managers;
 
 public partial class GameManager : Node
 {
-    [Node]
-    private ResourcePreloader _resourcePreloader;
-
     public static GameManager Instance { get; private set; }
 
-    public static Node Root { get; private set; }
+    [Export] public bool Debug { get; set; } = false;
+    [Export] public Color ClearColour { get; set; } = new Color("#0e071b");
+
+    #region Time
 
     public static float Time { get; private set; } = 0f;
     public static uint FrameCount { get; private set; } = 0;
@@ -20,10 +23,7 @@ public partial class GameManager : Node
     public static float Delta { get; private set; } = 0f;
     public static float PhysicsDelta { get; private set; } = 0f;
 
-    public static World2D GlobalWorld { get; private set; }
-    public static PhysicsDirectSpaceState2D GlobalPhysicsSpace => GlobalWorld.DirectSpaceState;
-
-    [Export] public bool Debug { get; set; } = false;
+    #endregion
 
     #region Game Events
 
@@ -32,44 +32,28 @@ public partial class GameManager : Node
 
     #endregion
 
-    public override void _Notification(int what)
-    {
-        if (what == NotificationSceneInstantiated)
-        {
-            Instance = this;
-            this.WireNodes();
-        }
-    }
-
-    private void InstantiateResource(string name)
-    {
-        Resource res = _resourcePreloader.GetResource(name);
-        Node node = ((PackedScene)res).Instantiate();
-        AddChild(node);
-    }
-
     public override void _EnterTree()
     {
+        Instance = this;
+        this.WireNodes();
+
         ProcessPriority = -1;
     }
 
     public override void _Ready()
     {
-        Root = GetTree().Root;
+        CoroutineManager.StartCoroutine(SetUpGame(), true, true);
 
-        InstantiateResource("CoroutineManager");
-        InstantiateResource("SceneManager");
-
-        CallDeferred(nameof(HandleInitialScene));
+        RenderingServer.SetDefaultClearColor(ClearColour);
     }
 
-    private void HandleInitialScene()
+    private IEnumerator SetUpGame()
     {
-        var scene = Root.GetChild<Node2D>(GetChildCount() - 1);
-        Root.RemoveChild(scene);
-        SceneManager.LoadScene(scene);
+        var root = GetTree().Root;
+        var node = root.GetChildren().FirstOrDefault(x => x.Name.ToString().EndsWith("scene", System.StringComparison.CurrentCultureIgnoreCase));
+        root.RemoveChild(node);
+        yield return SceneManager.Instance.LoadNodeCoroutine(node, SceneTransition.None);
     }
-
 
     public override void _Process(double delta)
     {
@@ -87,38 +71,6 @@ public partial class GameManager : Node
 
     public override void _PhysicsProcess(double delta)
     {
-        // GlobalWorld = SceneManager.CurrentScene.GetWorld2D();
         PhysicsDelta = (float)delta;
     }
-
-    #region Physics Helpers
-
-    public static bool Raycast(Vector2 from, Vector2 to, uint mask)
-    {
-        PhysicsRayQueryParameters2D query = PhysicsRayQueryParameters2D.Create(from, to, mask, null);
-        Dictionary res = GlobalPhysicsSpace.IntersectRay(query);
-
-        return res.Count > 0;
-    }
-
-    #endregion
-
-    #region FX Helpers
-
-    public static Node2D SpawnPixelatedFX(PackedScene fx, Vector2 position, bool root = true)
-    {
-        var fxInstance = fx.Instantiate() as Node2D;
-
-        if (root)
-            Root.AddChild(fxInstance);
-        else
-            Instance.AddChild(fxInstance);
-
-        fxInstance.GlobalPosition = position;
-        RenderingManager.Instance.TryAddNodeToLayer(fxInstance);
-
-        return fxInstance;
-    }
-
-    #endregion
 }
